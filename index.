@@ -1,0 +1,50 @@
+<script>
+    const wheel = document.querySelector('.wheel');
+    const spinBtn = document.querySelector('.spinBtn');
+    
+    // Mảng xác suất (phần trăm). Đảm bảo tổng cộng là 100.
+    const probabilities = [
+        { name: "Nguyễn Văn Bẩy", probability: 15 },
+        { name: "Nguyễn Đức Đạt", probability: 10 },
+        { name: "Trần Minh Đức", probability: 5 },
+        { name: "Nguyễn Linh Hương", probability: 5 },
+        { name: "Bùi Quang Huy", probability: 5 },
+        { name: "Đặng Phương Linh", probability: 5 },
+        { name: "Trần Đình Thắng", probability: 5 },
+        { name: "Lê Văn Thành", probability: 5 },
+        { name: "Nguyễn Thị Thanh", probability: 5 },
+        { name: "Bùi Ngọc Thanh Thúy", probability: 5 },
+        { name: "Trần Văn Thắng", probability: 5 },
+        { name: "Nguyễn Trọng Thành Nhân", probability: 10 },
+        { name: "Nguyễn Đức Anh Kiệt", probability: 15 },
+        { name: "Cô Thủy", probability: 5 }
+    ];
+
+    // Chuyển đổi xác suất thành góc quay
+    const segments = [];
+    let cumulativeAngle = 0;
+    probabilities.forEach(({ name, probability }) => {
+        const angle = (probability / 100) * 360;
+        segments.push({ name, startAngle: cumulativeAngle, endAngle: cumulativeAngle + angle });
+        cumulativeAngle += angle;
+    });
+
+    function getWinner(degree) {
+        // Tìm người chiến thắng dựa trên góc quay
+        const normalizedDegree = degree % 360;
+        return segments.find(segment => 
+            normalizedDegree >= segment.startAngle && normalizedDegree < segment.endAngle
+        ).name;
+    }
+
+    spinBtn.onclick = function () {
+        const spinValue = Math.ceil(Math.random() * 3600); // Tổng số góc quay
+        const totalRotation = spinValue + Math.ceil(Math.random() * 360); // Xoay thêm một vòng ngẫu nhiên
+        const winner = getWinner(totalRotation);
+        console.log("Winner:", winner);
+
+        // Quay bánh xe
+        wheel.style.transition = "transform 5s ease-out";
+        wheel.style.transform = `rotate(${totalRotation}deg)`;
+    };
+</script>
